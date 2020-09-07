@@ -18,7 +18,7 @@ nix-shell
 
 let blurcam = builtins.fetchGit {
 	url = "https://github.com/diamondburned/blurcam.git";
-	rev = "9275eeb55925bd6487b52e8eea0741e5143cdd17"; # update this
+	rev = "94510ec1dcc57803dc4ce04c4530dd00ed330a25"; # update this
 };
 
 in {
@@ -33,6 +33,9 @@ in {
 			$ctl -d /dev/video0 --set-fmt-video "width=640,height=480"
 			$ctl -d /dev/video0 -c "power_line_frequency=0,sharpness=100,saturation=25,contrast=40,brightness=100"
 		'';
+		sigma  = 0.5;
+		width  =  -2;
+		height = 120;
 	};
 }
 ```
