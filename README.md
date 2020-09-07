@@ -18,7 +18,7 @@ nix-shell
 
 let blurcam = builtins.fetchGit {
 	url = "https://github.com/diamondburned/blurcam.git";
-	# ...
+	rev = "9275eeb55925bd6487b52e8eea0741e5143cdd17"; # update this
 };
 
 in {
