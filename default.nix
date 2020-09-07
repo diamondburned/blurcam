@@ -2,8 +2,7 @@
 
 with lib;
 
-let cfg     = config.services.blurcam;
-	package = pkgs.callPackage ./shell.nix {};
+let cfg = config.services.blurcam;
 
 in {
 	options.services.blurcam = {
@@ -65,9 +64,18 @@ in {
 					${./blurcam} ${escapeShellArg cfg.input} ${escapeShellArg cfg.output}
 				'';
 
+				targets = [
+					"multi-user.target"
+					"hybrid-sleep.target"
+					"hibernate.target"
+					"suspend.target"
+					"suspend-then-hibernate.target"
+				];
+
 			in {
 				description = "Blurcam daemon";
-				wantedBy = [ "multi-user.target" ];
+				wantedBy = targets;
+				after    = targets;
 				serviceConfig = {
 					Type = "simple";
 					ExecStart = "${script}/bin/blurcam_wrapper";
