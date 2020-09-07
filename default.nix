@@ -19,6 +19,24 @@ in {
 			description = "Video output file";
 		};
 
+		sigma = mkOption {
+			default = 0.5;
+			type = types.float;
+			description = "Gaussian blur sigma value";
+		};
+
+		width = mkOption {
+			default = -2;
+			type = types.int;
+			description = "Width to scale to";
+		};
+
+		height = mkOption {
+			default = 120;
+			type = types.int;
+			description = "Height to scale to";
+		};
+
 		preamble = mkOption {
 			default = "";
 			example = ''
@@ -44,7 +62,7 @@ in {
 				''#!${pkgs.stdenv.shell}
 					set -e
 					${cfg.preamble}
-					${./blurcam} "${cfg.input}" "${cfg.output}"
+					${./blurcam} ${escapeShellArg cfg.input} ${escapeShellArg cfg.output}
 				'';
 
 			in {
@@ -60,6 +78,11 @@ in {
 					ProtectHome     = true;
 					ProtectSystem   = "strict";
 					ReadWriteDirectories = cfg.output;
+				};
+				environment = {
+					BLURCAM_SIGMA  = (toString cfg.sigma);
+					BLURCAM_WIDTH  = (toString cfg.width);
+					BLURCAM_HEIGHT = (toString cfg.height);
 				};
 				path = with pkgs; [ ffmpeg kmod bash ];
 			};
