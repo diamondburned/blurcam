@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+
+main() {
+	command -v ffmpeg > /dev/null      || fatal "Missing ffmpeg."
+	[[ $(lsmod) == *"v4l2loopback"* ]] || fatal "v4l2loopback not loaded."
+
+	BLURCAM_INPUT="$1"
+	BLURCAM_OUTPUT="$2"
+
+	[[ "$BLURCAM_INPUT"  ]] || fatal 'Missing input in $1.'
+	[[ "$BLURCAM_OUTPUT" ]] || fatal 'Missing output in $2.'
+
+	BLURCAM_SIGMA="${BLURCAM_SIGMA:-   0.5}"
+	BLURCAM_WIDTH="${BLURCAM_WIDTH:-    -2}"
+	BLURCAM_HEIGHT="${BLURCAM_HEIGHT:- 120}"
+
+	ffmpeg -v error                                                           \
+		-i "$BLURCAM_INPUT"                                                   \
+		-vf "scale=$BLURCAM_WIDTH:$BLURCAM_HEIGHT,gblur=sigma=$BLURCAM_SIGMA" \
+		-pix_fmt yuyv422 -f v4l2 "$BLURCAM_OUTPUT"
+}
+
+fatal() {
+	echo "$1" 1>&2
+	exit 1
+}
+
+main "$@"
