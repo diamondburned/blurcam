@@ -52,6 +52,8 @@ in {
 			v4l2loopback
 		];
 
+		boot.kernelModules = [ "v4l2loopback" ];
+
 		boot.extraModprobeConfig = ''
 			options v4l2loopback video_nr=4 exclusive_caps=1
 		'';
@@ -81,11 +83,10 @@ in {
 					ExecStart = "${script}/bin/blurcam_wrapper";
 					User  = "root";
 					Group = "video";
-					NoNewPrivileges = true;
 					PrivateDevices  = false;
 					ProtectHome     = true;
+					NoNewPrivileges = true;
 					ProtectSystem   = "strict";
-					ReadWriteDirectories = cfg.output;
 				};
 				environment = {
 					BLURCAM_SIGMA  = (toString cfg.sigma);
